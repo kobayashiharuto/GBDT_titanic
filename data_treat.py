@@ -27,7 +27,14 @@ def print_lack_table(data_frame: DataFrame):
     print(lack_table_ren_columns)
 
 
-if __name__ == '__main__':
+# データ読み込み
+train = pd.read_csv('data/train.csv')
+datas = train
+print(datas)
+datas = datas[datas['Ticket'].apply(lambda x: len(x.split(' ')) > 1)]
+datas.to_csv('ticket.csv')
+
+if __name__ == 'main__':
     # データ読み込み
     train = pd.read_csv('data/train.csv')
     datas = train
@@ -88,17 +95,15 @@ if __name__ == '__main__':
         'Ms': 0,
     }
 
-    # 結婚しているか（0: 未婚, 1: 既婚）
-    married_mapping = {
-        'Dr': NaN,
-    }
-
     # データをマッピング
     datas['Status'] = datas['Name'].map(status_mapping)
     datas['Married'] = datas['Name'].map(married_mapping)
     datas['Doctor'] = datas['Name'].map({'Dr': 1}).fillna(0)
     datas['Rev'] = datas['Name'].map({'Rev': 1}).fillna(0)
     datas['Army'] = datas['Name'].map({'Major': 1, 'Col': 1}).fillna(0)
+
+    # 名前を削除
+    datas.drop(columns='Name')
 
     datas.to_csv('data_treated/train.csv')
 
