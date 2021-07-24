@@ -9,8 +9,9 @@ train = pd.read_csv('data/titanic_train_treated.csv')
 test = pd.read_csv('data/titanic_test_treated.csv')
 
 # 説明変数と目的変数に分ける
-data = train[['Pclass', 'Sex', 'Age', 'Fare']].values
-target = train['Survived'].values
+data = train[['Pclass', 'Sex', 'Age', 'Fare']]
+target = train['Survived']
+
 
 # データ分割
 train_datas, test_datas, train_labels, test_labels = train_test_split(
