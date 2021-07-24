@@ -30,7 +30,6 @@ def print_lack_table(data_frame: DataFrame):
 if __name__ == '__main__':
     # データ読み込み
     train = pd.read_csv('data/train.csv')
-    # datas = train[['Pclass', 'Sex', 'Age', 'Fare', 'Embarked']]
     datas = train
 
     # 欠損値がある行を削除
@@ -53,22 +52,26 @@ if __name__ == '__main__':
     # キャビンを消す
     datas = datas.drop(columns='Cabin')
 
+    # 運賃を丸める
+    datas['Fare'] = datas['Fare'].round()
+
     # 名前処理
     datas['Name'] = datas['Name'].dropna().map(
         lambda x: x.split(',')[1].split('.')[0].strip())
 
+    # 外れ値としてキャプテンを削除
+    datas.drop(datas.loc[datas['Name'] == 'Capt'].index, inplace=True)
+
+    # 貴族度（1 < 3）
     status_mapping = {
         'Mr': 1,
         'Miss': 1,
         'Mrs': 1,
         'Master': 2,
-        'Dr': NaN,
-        'Rev': NaN,
         'Mlle': 1,
-        'Major': NaN,
-        'Col': NaN,
         'Mme': 1,
         'Don': 3,
+        'Dona': 3,
         'Lady': 3,
         'Ms': 1,
         'the Countess': 3,
@@ -76,33 +79,26 @@ if __name__ == '__main__':
         'Jonkheer': 2
     }
 
+    # 結婚しているか（0: 未婚, 1: 既婚）
     married_mapping = {
-        'Mr': NaN,
         'Miss': 0,
         'Mrs': 1,
-        'Master': NaN,
-        'Dr': NaN,
-        'Rev': NaN,
         'Mlle': 1,
-        'Major': NaN,
-        'Col': NaN,
         'Mme': 1,
-        'Don': NaN,
-        'Lady': NaN,
         'Ms': 0,
-        'the Countess': NaN,
-        'Sir': NaN,
-        'Jonkheer': NaN,
     }
 
-    # キャプテンを削除
-    datas.drop(datas.loc[datas['Name'] == 'Capt'].index, inplace=True)
+    # 結婚しているか（0: 未婚, 1: 既婚）
+    married_mapping = {
+        'Dr': NaN,
+    }
 
+    # データをマッピング
     datas['Status'] = datas['Name'].map(status_mapping)
     datas['Married'] = datas['Name'].map(married_mapping)
-
-    # 運賃を丸める
-    datas['Fare'] = datas['Fare'].round()
+    datas['Doctor'] = datas['Name'].map({'Dr': 1}).fillna(0)
+    datas['Rev'] = datas['Name'].map({'Rev': 1}).fillna(0)
+    datas['Army'] = datas['Name'].map({'Major': 1, 'Col': 1}).fillna(0)
 
     datas.to_csv('data_treated/train.csv')
 
