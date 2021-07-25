@@ -6,7 +6,6 @@ from pandas.core.frame import DataFrame
 
 # 加工してラベルとデータに分ける
 def train_data_treat(train: DataFrame):
-    datas = train[['Pclass', 'Sex', 'Age', 'Fare']]
     labels = train['Survived']
     return datas, labels
 
@@ -23,7 +22,7 @@ def print_lack_table(data_frame: DataFrame):
 
 if __name__ == '__main__':
     # データ読み込み
-    train = pd.read_csv('data/train.csv')
+    train = pd.read_csv('data/test.csv')
     datas = train
 
     # 欠損値がある行を削除
@@ -100,6 +99,6 @@ if __name__ == '__main__':
     # 名前を削除
     datas = datas.drop(columns='Name')
 
-    datas.to_csv('data_treated/train.csv')
+    datas.to_csv('data_treated/test.csv', index=False)
 
     print(datas.head(10))

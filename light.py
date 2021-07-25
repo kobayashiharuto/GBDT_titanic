@@ -7,8 +7,8 @@ from data_treat import train_data_treat
 
 
 # データ読み込み
-train = pd.read_csv('data/train_mod.csv')
-test = pd.read_csv('data/test_mod.csv')
+train = pd.read_csv('data_treated/train.csv')
+test = pd.read_csv('data_treated/test.csv')
 
 datas, labels = train_data_treat(train)
 print(datas.head(5))
