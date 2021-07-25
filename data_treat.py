@@ -27,13 +27,6 @@ def print_lack_table(data_frame: DataFrame):
     print(lack_table_ren_columns)
 
 
-# データ読み込み
-train = pd.read_csv('data/train.csv')
-datas = train
-print(datas)
-datas = datas[datas['Ticket'].apply(lambda x: len(x.split(' ')) > 1)]
-datas.to_csv('ticket.csv')
-
 if __name__ == 'main__':
     # データ読み込み
     train = pd.read_csv('data/train.csv')
@@ -41,6 +34,7 @@ if __name__ == 'main__':
 
     # 欠損値がある行を削除
     datas = datas.dropna(subset=['Embarked'])
+    datas = datas.dropna(subset=['Fare'])
 
     # 乗船港と性別のカテゴリカルデータを int に変換
     datas['Embarked'] = datas['Embarked'].map({'C': 0, 'Q': 1, 'S': 2})
@@ -61,6 +55,11 @@ if __name__ == 'main__':
 
     # 運賃を丸める
     datas['Fare'] = datas['Fare'].round()
+
+    # チケット処理（アルファベットから始まるものだけカテゴリカルデータとして扱い、他は欠損値とする）
+    datas['Ticket'] = datas['Ticket'].map(
+        lambda x: NaN if x[0].isdecimal() else x[0])
+    datas['Ticket'] = datas['Ticket'].factorize()[0]
 
     # 名前処理
     datas['Name'] = datas['Name'].dropna().map(
