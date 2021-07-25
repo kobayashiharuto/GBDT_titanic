@@ -23,7 +23,7 @@ def print_lack_table(data_frame: DataFrame):
 
 if __name__ == '__main__':
     # データ読み込み
-    train = pd.read_csv('data/test.csv')
+    train = pd.read_csv('data/train.csv')
     datas = train
 
     # 欠損値がある行を削除
@@ -89,15 +89,17 @@ if __name__ == '__main__':
     }
 
     # データをマッピング
-    datas['Status'] = datas['Name'].map(status_mapping)
-    datas['Married'] = datas['Name'].map(married_mapping)
-    datas['Doctor'] = datas['Name'].map({'Dr': 1}).fillna(0)
-    datas['Rev'] = datas['Name'].map({'Rev': 1}).fillna(0)
-    datas['Army'] = datas['Name'].map({'Major': 1, 'Col': 1}).fillna(0)
+    datas['Status'] = datas['Name'].map(status_mapping).fillna(-1).astype(int)
+    datas['Married'] = datas['Name'].map(
+        married_mapping).fillna(-1).astype(int)
+    datas['Doctor'] = datas['Name'].map({'Dr': 1}).fillna(0).astype(int)
+    datas['Rev'] = datas['Name'].map({'Rev': 1}).fillna(0).astype(int)
+    datas['Army'] = datas['Name'].map(
+        {'Major': 1, 'Col': 1}).fillna(0).astype(int)
 
     # 名前を削除
     datas = datas.drop(columns='Name')
 
-    datas.to_csv('data_treated/test.csv')
+    datas.to_csv('data_treated/train.csv')
 
     print(datas.head(10))
