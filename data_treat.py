@@ -4,12 +4,6 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 
 
-class DataProcesser:
-    def __init__(self, train, test):
-        self.train = train
-        self.test = test
-
-
 # 加工してラベルとデータに分ける
 def train_data_treat(train: DataFrame):
     datas = train[['Pclass', 'Sex', 'Age', 'Fare']]
@@ -27,9 +21,9 @@ def print_lack_table(data_frame: DataFrame):
     print(lack_table_ren_columns)
 
 
-if __name__ == 'main__':
+if __name__ == '__main__':
     # データ読み込み
-    train = pd.read_csv('data/train.csv')
+    train = pd.read_csv('data/test.csv')
     datas = train
 
     # 欠損値がある行を削除
@@ -102,8 +96,8 @@ if __name__ == 'main__':
     datas['Army'] = datas['Name'].map({'Major': 1, 'Col': 1}).fillna(0)
 
     # 名前を削除
-    datas.drop(columns='Name')
+    datas = datas.drop(columns='Name')
 
-    datas.to_csv('data_treated/train.csv')
+    datas.to_csv('data_treated/test.csv')
 
     print(datas.head(10))
