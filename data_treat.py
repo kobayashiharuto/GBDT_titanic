@@ -5,8 +5,9 @@ from pandas.core.frame import DataFrame
 
 
 # 加工してラベルとデータに分ける
-def train_data_treat(train: DataFrame):
-    labels = train['Survived']
+def data_split(data: DataFrame):
+    labels = data['Survived']
+    datas = data.drop(columns=['Survived', 'PassengerId'])
     return datas, labels
 
 
@@ -27,7 +28,6 @@ if __name__ == '__main__':
 
     # 欠損値がある行を削除
     datas = datas.dropna(subset=['Embarked'])
-    datas = datas.dropna(subset=['Fare'])
 
     # 乗船港と性別のカテゴリカルデータを int に変換
     datas['Embarked'] = datas['Embarked'].map({'C': 0, 'Q': 1, 'S': 2})
